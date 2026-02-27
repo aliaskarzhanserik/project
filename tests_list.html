@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Тесттер{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Тесттер</h2>
+    <p>Төмендегі 10 тесттен біреуін таңдап, премиум арқылы 40 сұрақтық тест бастаңыз.</p>
+    <ul>
+      {% for s in sets %}
+        <li style="margin-bottom:8px">
+          <strong>{{ s['name'] }}</strong> — {{ s['description'] }}
+          <div style="margin-top:6px"><a class="btn" href="/start_test/{{ s['id'] }}">Бастау</a></div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

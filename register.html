@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Тіркелу{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Тіркелу</h2>
+    <form method="post">
+      <div class="form-row"><label>Пайдаланушы аты:<br><input name="username" required></label></div>
+      <div class="form-row"><label>Email:<br><input type="email" name="email" required></label></div>
+      <div class="form-row"><label>Пароль:<br><input type="password" name="password" required></label></div>
+      <div style="margin-top:12px"><button class="btn" type="submit">Тіркелу</button></div>
+    </form>
+    <p style="margin-top:10px"><a href="/login">Кіру</a></p>
+  </div>
+{% endblock %}

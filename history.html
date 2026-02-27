@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Тарих және Анализ{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Сіздің тест тарихы</h2>
+    <p>Жалпы сынақтар: <strong>{{ stats.total_attempts }}</strong> | Орташа ұпай: <strong>{{ stats.avg_percent }}%</strong> | Үздік: <strong>{{ stats.best_percent }}%</strong></p>
+
+    <h3>Тренд (соңғы {{ trend|length }} сынақ)</h3>
+    <svg width="100%" height="50" viewBox="0 0 200 50" preserveAspectRatio="none" style="background:#fff;border-radius:6px;padding:6px">
+      {% if trend %}
+        {% set maxv = trend|max %}
+        {% set minv = trend|min %}
+        {% set range = maxv - minv if (maxv - minv) > 0 else 1 %}
+        {% for val in trend %}
+          {% set i = loop.index0 %}
+        {% endfor %}
+        {% set points = [] %}
+        {% for val in trend %}
+          {% set x = (loop.index0/(trend|length-1))*200 if trend|length > 1 else 0 %}
+          {% set y = 50 - ((val - minv)/range)*40 - 5 %}
+          {% set points = points + [x|string + ',' + y|string] %}
+        {% endfor %}
+        <polyline fill="none" stroke="#2b8cff" stroke-width="2" points="{{ points|join(' ') }}" />
+      {% endif %}
+    </svg>
+
+    <h3>Жеке нәтижелер</h3>
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr style="text-align:left;border-bottom:1px solid #eef2f7">
+          <th style="padding:8px">#</th>
+          <th style="padding:8px">Күні</th>
+          <th style="padding:8px">Ұпай</th>
+          <th style="padding:8px">Процент</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+          <tr>
+            <td style="padding:8px">{{ loop.index }}</td>
+            <td style="padding:8px">{{ r['test_date'] }}</td>
+            <td style="padding:8px">{{ r['score'] }} / {{ r['total_questions'] or 40 }}</td>
+            <td style="padding:8px">{{ ((r['score'] / (r['total_questions'] or 40))*100)|round(1) }}%</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Анализ</h3>
+    <p>{{ analysis }}</p>
+  </div>
+{% endblock %}

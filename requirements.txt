@@ -1,0 +1,2 @@
+Flask==2.3.3
+# Werkzeug will be resolved by pip according to Flask's requirements

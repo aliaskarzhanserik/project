@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Рейтинг{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Рейтинг — Жоғары ұпайлар</h2>
+    {% if user_rank %}
+      <p>Сіздің рейтингіңіз: <strong>#{{ user_rank }}</strong> — үздік ұпайыңыз: <strong>{{ user_best }}</strong></p>
+    {% endif %}
+
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr style="text-align:left;border-bottom:1px solid #eef2f7">
+          <th style="padding:8px">#</th>
+          <th style="padding:8px">Пайдаланушы</th>
+          <th style="padding:8px">Үздік ұпай</th>
+          <th style="padding:8px">Орташа</th>
+          <th style="padding:8px">Тіркелген</th>
+          <th style="padding:8px">Сынақтар</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            <td style="padding:8px">{{ loop.index }}</td>
+            <td style="padding:8px">{{ row['username'] }}</td>
+            <td style="padding:8px">{{ row['best_score'] }}</td>
+            <td style="padding:8px">{{ row['avg_score'] }}</td>
+            <td style="padding:8px">{{ row['last_test'] }}</td>
+            <td style="padding:8px">{{ row['attempts'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+{% endblock %}

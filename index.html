@@ -1,11 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Басты - ПДД Тест жүйесі{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Қош келдіңіз</h2>
+    <p>ПДД тест жүйесіне қош келдіңіз. Тестті бастау үшін <a class="btn" href="/test">Тестті бастау</a></p>
+  </div>
+
+  <div class="card">
+    <h3>Кейбір сұрақтар</h3>
+    <ul>
+      {% for q in questions[:5] %}
+        <li>{{ q['question_text'] }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

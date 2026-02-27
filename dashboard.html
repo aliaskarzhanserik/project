@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Профиль</h2>
+    <p>Пайдаланушы: {{ session.username }}</p>
+    <p>Премиум мәртебе: {% if session.premium %}<strong style="color:var(--success)">Иә</strong>{% else %}Жоқ{% endif %}</p>
+
+    {% if not session.premium %}
+      <p><a class="btn" id="waSubBtn" href="#" data-userid="{{ session.user_id }}" data-username="{{ session.username }}">Премиумға жазылу (WhatsApp арқылы)</a></p>
+      <script>
+        (function(){
+          var btn = document.getElementById('waSubBtn');
+          if(!btn) return;
+          var userId = btn.dataset.userid || '';
+          var username = btn.dataset.username || '';
+          var message = 'Сәлем, мен премиумға жазылғым келеді. Пайдаланушы id=' + userId + ', username=' + username;
+          var encoded = encodeURIComponent(message);
+          btn.href = 'https://wa.me/77785627501?text=' + encoded;
+          btn.target = '_blank';
+        })();
+      </script>
+    {% endif %}
+
+    <p style="margin-top:12px"><a href="/course">Курс</a> | <a href="/test">Тест</a> | <a href="/logout">Шығу</a></p>
+  </div>
+{% endblock %}

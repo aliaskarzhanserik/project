@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}ПДД Тест жүйесі{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">ss
+</head>
+<body class="page-fade">
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="site-title">ПДД Тест жүйесі</h1>
+      <nav class="main-nav">
+        <a href="/">Басты</a>
+        <a href="/course">Курс</a>
+        <a href="/tests">Тесттер</a>
+        <a href="/training">Оқу</a>
+        <a href="/leaderboard">Рейтинг</a>
+        <a href="https://www.instagram.com/pddala.kz?igsh=MTMyc2Y5Ymw1dzRkaw%3D%3D&utm_source=qr" target="_blank">Инстаграм</a>
+      </nav>
+      <div class="auth">
+        {% if session.username %}
+          <span class="welcome">{{ session.username }}</span>
+          <a class="btn small" href="/dashboard">Профиль</a>
+          <a class="btn small ghost" href="/logout">Шығу</a>
+        {% else %}
+          <a class="btn small" href="/login">Кіру</a>
+          <a class="btn small ghost" href="/register">Тіркелу</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for m in messages %}
+            <div class="flash">{{ m }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© ПДД Тест жүйесі</small>
+      <div class="footer-links">
+        <a href="https://wa.me/77785627501" target="_blank">Төлем/Қолдау (WhatsApp)</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

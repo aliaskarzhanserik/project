@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Оқу режимдері{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Оқу режимдері</h2>
+    <ul>
+      {% for m in modes %}
+        <li style="margin-bottom:8px">
+          <strong>{{ m.name }}</strong>
+          <div style="margin-top:6px"><a class="btn" href="/training/{{ m.id }}">Оту</a></div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

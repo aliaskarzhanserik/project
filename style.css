@@ -1,0 +1,64 @@
+:root{
+  --bg:#f6f9fc;
+  --card:#ffffff;
+  --accent:#2b8cff;
+  --muted:#6b7280;
+  --success:#16a34a;
+}
+*{box-sizing:border-box}
+body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); color:#0f172a; margin:0}
+.container{max-width:900px;margin:0 auto;padding:20px}
+.site-header{background:linear-gradient(90deg, #ffffffcc, #f0f6ffcc);box-shadow:0 1px 6px rgba(15,23,42,0.06)}
+.header-inner{display:flex;align-items:center;gap:16px}
+.site-title{margin:0;font-size:1.25rem}
+.main-nav{margin-left:8px;display:flex;gap:12px}
+.main-nav a{color:var(--muted);text-decoration:none;transition:color .2s}
+.main-nav a:hover{color:var(--accent)}
+.auth{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none;display:inline-block;transition:transform .12s ease, box-shadow .12s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,140,255,0.12)}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(43,140,255,0.12)}
+.btn.small{padding:6px 10px;font-size:.9rem}
+.main-content{padding:28px 20px}
+.card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(15,23,42,0.04);margin-bottom:16px;animation:cardIn .4s ease}
+.fade-in{animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.995)}to{opacity:1;transform:none}}
+.flash-wrap{position:fixed;right:20px;top:90px;z-index:60}
+.flash{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 8px 24px rgba(43,140,255,0.12);margin-bottom:8px}
+.site-footer{padding:12px 0;color:var(--muted)}
+h1,h2{margin:0 0 12px 0}
+ul{padding-left:18px}
+.timer{font-weight:700;padding:6px 10px;border-radius:8px;background:#fff;display:inline-block;box-shadow:0 6px 18px rgba(2,6,23,0.04)}
+.timer.warning{animation:blink 1s steps(2) infinite;background:linear-gradient(90deg,#fff7ed,#fff1f2)}
+@keyframes blink{50%{opacity:.3}}
+.question-fieldset{margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #eef2f7;background:linear-gradient(#fff,#fbfdff)}
+.footer-links a{color:var(--muted);text-decoration:none;margin-left:12px}
+.page-fade{animation:fadePage .5s ease}
+@keyframes fadePage{from{opacity:0}to{opacity:1}}
+
+.autosave-indicator{display:inline-block;margin-left:12px;color:var(--muted);font-size:.95rem;opacity:.85}
+.autosave-indicator.saving{color:var(--accent);animation:scalePulse .9s ease}
+.autosave-indicator.saved{color:var(--success);animation:fadeIn .8s ease}
+@keyframes scalePulse{0%{transform:scale(.98)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    animation: slideIn 0.8s ease-out; 
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.card {
+    animation: slideIn 0.8s ease-out; 
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px); 
+}

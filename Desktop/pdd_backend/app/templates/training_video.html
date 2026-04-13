@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Видео сабақтар - ПДД Тесты{% endblock %}
+{% block content %}
+
+<div class="video-header scroll-fade">
+  <h1 class="page-title">Видео сабақтар</h1>
+  <p class="page-subtitle">Смотрите видеообъяснения по правилам дорожного движения</p>
+</div>
+
+<div class="video-sections">
+  <div class="video-section scroll-scale">
+    <h2>Светофоры</h2>
+    <p>Значение светофоров и как их проходить.</p>
+    <div class="video-container">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="video-section scroll-scale">
+    <h2>Дорожные знаки</h2>
+    <p>Типы дорожных знаков и их значение.</p>
+    <div class="video-container">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="video-section scroll-scale">
+    <h2>Правила дорожного движения</h2>
+    <p>Основные правила движения по дороге.</p>
+    <div class="video-container">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="video-section scroll-scale">
+    <h2>Безопасность</h2>
+    <p>Меры безопасности на дороге.</p>
+    <div class="video-container">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="video-section scroll-scale">
+    <h2>Айналма жол</h2>
+    <p>Правила движения на перекрестке.</p>
+    <div class="video-container">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="video-section scroll-scale">
+    <h2>Обгон и повороты</h2>
+    <p>Правила обгона и поворотов вправо и влево.</p>
+    <div class="video-container">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<style>
+  .video-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .page-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-subtitle {
+    font-size: 1.2rem;
+    color: var(--muted);
+  }
+
+  .video-sections {
+    display: grid;
+    gap: 40px;
+  }
+
+  .video-section {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    animation: slideUp 0.5s ease-out;
+  }
+
+  .video-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  .video-section p {
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .video-container {
+      padding-bottom: 75%;
+    }
+  }
+</style>
+
+{% endblock %}

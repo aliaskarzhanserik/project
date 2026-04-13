@@ -1,0 +1,51 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.128.2.138:5000
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 109-103-398
+127.0.0.1 - - [11/Apr/2026 14:17:22] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:17:36] "GET /tests HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:17:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:18:00] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:18:00] "GET /tests HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:18:11] "GET /tests HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:18:11] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:18:31] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:18:31] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:19:14] "GET /tests HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:19:14] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:19:16] "GET /rules HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:19:16] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:19:21] "GET /penalties HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:19:21] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:21:00] "GET /penalties HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:21:00] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:21:03] "GET /tests HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:21:03] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:21:05] "GET /rules HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:21:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:21:06] "GET /penalties HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:21:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:21:07] "GET /dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:21:07] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+ * Detected change in '/Users/zhanserikaliaskar/Desktop/pdd_backend/app/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 109-103-398
+Traceback (most recent call last):
+  File "/Users/zhanserikaliaskar/Desktop/pdd_backend/app/app.py", line 887, in <module>
+    app.run(debug=True, host='0.0.0.0', port=port)
+  File "/Users/zhanserikaliaskar/Library/Python/3.9/lib/python/site-packages/flask/app.py", line 889, in run
+    run_simple(t.cast(str, host), port, self, **options)
+  File "/Users/zhanserikaliaskar/Library/Python/3.9/lib/python/site-packages/werkzeug/serving.py", line 1115, in run_simple
+    run_with_reloader(
+  File "/Users/zhanserikaliaskar/Library/Python/3.9/lib/python/site-packages/werkzeug/_reloader.py", line 453, in run_with_reloader
+    ensure_echo_on()
+  File "/Users/zhanserikaliaskar/Library/Python/3.9/lib/python/site-packages/werkzeug/_reloader.py", line 433, in ensure_echo_on
+    termios.tcsetattr(sys.stdin, termios.TCSANOW, attributes)
+termios.error: (4, 'Interrupted system call')

@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% block title %}Обучение режимдері - ПДД Тесты{% endblock %}
+{% block content %}
+
+<div class="training-header scroll-fade">
+  <h1 class="training-title">Обучение режимдері</h1>
+  <p class="training-subtitle">Өзіңіздің уровеньіне сәйкес обучени режимін таңдаңыз</p>
+  <div class="lottie-wrapper" data-lottie-src="https://assets4.lottiefiles.com/packages/lf20_5isy6mes.json"></div>
+</div>
+
+<div class="training-modes">
+  {% for m in modes %}
+    <div class="mode-card scroll-scale">
+      <div class="mode-icon">
+        {% if m.id == 'learn' %}
+          📚
+        {% elif m.id == 'practice' %}
+          ⚡
+        {% elif m.id == 'video' %}
+          🎥
+        {% elif m.id == 'animation' %}
+          🎬
+        {% endif %}
+      </div>
+      <h3 class="mode-title">{{ m.name }}</h3>
+      
+      {% if m.id == 'learn' %}
+        <p class="mode-desc">
+          Әрбір вопрос арасында түсініктемелерді қарап, оңай ғана үйреніңіз.
+        </p>
+        <div class="mode-benefits">
+          <div class="benefit">✓ Түсініктемелі оқыту</div>
+          <div class="benefit">✓ Төмен жылдамдықта</div>
+          <div class="benefit">✓ Бәрін түсінуге</div>
+        </div>
+      {% elif m.id == 'practice' %}
+        <p class="mode-desc">
+          Сұрақтарды жәнеуге тез өтіңіз, виртуальктіліктіңіздігіңіз тексеріңіз.
+        </p>
+        <div class="mode-benefits">
+          <div class="benefit">✓ Түсініктемесіз ішектеу</div>
+          <div class="benefit">✓ Төмен жақындағы</div>
+          <div class="benefit">✓ Новые материалы всяких урвней</div>
+        </div>
+      {% elif m.id == 'video' %}
+        <p class="mode-desc">
+          Жол ережелері бойынша видео сабақтарды көріңіз.
+        </p>
+        <div class="mode-benefits">
+          <div class="benefit">✓ Видео түсініктемелер</div>
+          <div class="benefit">✓ Нақты мысалдар</div>
+          <div class="benefit">✓ Көзбен көру</div>
+        </div>
+      {% elif m.id == 'animation' %}
+        <p class="mode-desc">
+          Жол жүру жағдайларының анимацияларын көріңіз.
+        </p>
+        <div class="mode-benefits">
+          <div class="benefit">✓ Анимациялық мысалдар</div>
+          <div class="benefit">✓ Қиын жағдайлар</div>
+          <div class="benefit">✓ Интерактивті оқыту</div>
+        </div>
+      {% endif %}
+
+      <a href="/training/{{ m.id }}" class="btn-primary mode-btn">
+        <i class="fas fa-play"></i>
+        Бастау
+      </a>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="training-tips">
+  <div class="tips-header">
+    <i class="fas fa-lightbulb"></i>
+    <h3>Кеңес</h3>
+  </div>
+  <div class="tips-content">
+    <div class="tip">
+      <span class="tip-number">1</span>
+      <div>
+        <strong>Обучение режімінен басындыңыз</strong>
+        <p>Түсініктемелерді оқып, бәрін түсіңіз</p>
+      </div>
+    </div>
+    <div class="tip">
+      <span class="tip-number">2</span>
+      <div>
+        <strong>Видео сабақтарды көріңіз</strong>
+        <p>Жол ережелерінің видео түсініктемелері</p>
+      </div>
+    </div>
+    <div class="tip">
+      <span class="tip-number">3</span>
+      <div>
+        <strong>Анимациялық мысалдарды зерттеңіз</strong>
+        <p>Нақты жағдайлардың анимациялары</p>
+      </div>
+    </div>
+    <div class="tip">
+      <span class="tip-number">4</span>
+      <div>
+        <strong>Практика режіміне өтіңіз</strong>
+        <p>Быстро тътестируйте свои знания</p>
+      </div>
+    </div>
+    <div class="tip">
+      <span class="tip-number">5</span>
+      <div>
+        <strong>Сынақтарды өтіңіз</strong>
+        <p>Өндіктіліктіңіздіктегі статистиканы өлшеңіз</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .training-header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .training-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .training-subtitle {
+    font-size: 1.2rem;
+    color: var(--muted);
+  }
+
+  .training-modes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    margin-bottom: 60px;
+  }
+
+  .mode-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 28px;
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+    animation-fill-mode: both;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mode-card:nth-child(1) { animation-delay: 0s; }
+  .mode-card:nth-child(2) { animation-delay: 0.2s; }
+
+  .mode-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 20px 50px rgba(79, 70, 229, 0.15);
+    transform: translateY(-8px);
+  }
+
+  .mode-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+
+  .mode-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .mode-desc {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    flex: 1;
+  }
+
+  .mode-benefits {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(34, 211, 238, 0.08));
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .benefit {
+    padding: 8px 0;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .mode-btn {
+    justify-content: center;
+    padding: 14px 28px;
+    gap: 10px;
+  }
+
+  .training-tips {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(34, 211, 238, 0.08));
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: slideUp 0.6s ease-out 0.4s backwards;
+  }
+
+  .tips-header {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tips-header i {
+    font-size: 1.5rem;
+  }
+
+  .tips-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  .tips-content {
+    padding: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+  }
+
+  .tip {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .tip-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    border-radius: 50%;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .tip strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .tip p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    .training-title {
+      font-size: 2rem;
+    }
+
+    .training-modes {
+      grid-template-columns: 1fr;
+    }
+
+    .tips-content {
+      grid-template-columns: 1fr;
+      padding: 20px;
+    }
+  }
+</style>
+
+{% endblock %}

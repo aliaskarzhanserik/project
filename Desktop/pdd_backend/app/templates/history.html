@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Тарих және Анализ{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>📊 Сіздің тест тарихы</h2>
+  <p>Жалпы сынақтар: <strong>{{ stats.total_attempts }}</strong> | Орташа: <strong>{{ stats.avg_percent }}%</strong> | Үздік: <strong>{{ stats.best_percent }}%</strong></p>
+  <h3>Жеке нәтижелер</h3>
+  <table>
+    <thead><tr><th>#</th><th>Күні</th><th>Ұпай</th><th>Процент</th></tr></thead>
+    <tbody>
+      {% for r in rows %}
+      <tr><td>{{ loop.index }}</td><td>{{ r['test_date'] }}</td><td>{{ r['score'] }} / {{ r['total_questions'] or 40 }}</td><td>{{ ((r['score'] / (r['total_questions'] or 40))*100)|round(1) }}%</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h3>Анализ</h3>
+  <p>{{ analysis }}</p>
+</div>
+{% endblock %}

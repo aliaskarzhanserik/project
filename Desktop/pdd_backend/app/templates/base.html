@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}ПДД Тесты - Безопасность на дороге{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.1/lottie.min.js"></script>
+</head>
+<body class="page-fade">
+  <header class="site-header modern-header">
+    <div class="container header-inner">
+      <div class="logo-section">
+        <a href="/" class="logo-link">
+          <div class="logo-icon">🚗</div>
+          <div class="logo-text">
+            <div class="logo-title">ПДД Тесты</div>
+            <div class="logo-subtitle">Правила дорожного движения</div>
+          </div>
+        </a>
+      </div>
+
+      <button class="mobile-menu-toggle" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <nav class="main-nav modern-nav" id="mobileMenu">
+        <a href="/tests" class="nav-item {% if request.path == '/tests' %}active{% endif %}">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Тесты</span>
+        </a>
+        <a href="/rules" class="nav-item {% if request.path == '/rules' %}active{% endif %}">
+          <i class="fas fa-book-open"></i>
+          <span>Правила</span>
+        </a>
+        <a href="/penalties" class="nav-item {% if request.path == '/penalties' %}active{% endif %}">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Штрафы</span>
+        </a>
+        <a href="/dashboard" class="nav-item {% if request.path == '/dashboard' %}active{% endif %}">
+          <i class="fas fa-user-circle"></i>
+          <span>Профиль</span>
+        </a>
+      </nav>
+
+      <div class="auth-section">
+        {% if session.username %}
+          <div class="user-menu">
+            <a href="/dashboard" class="user-button">
+              <i class="fas fa-user-circle"></i>
+              <span>{{ session.username }}</span>
+            </a>
+            <a href="/logout" class="btn-logout" title="Выход">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+          </div>
+        {% else %}
+          <a href="/login" class="btn-login">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Вход</span>
+          </a>
+          <a href="/register" class="btn-signup">
+            <span>Регистрация</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for m in messages %}
+            <div class="flash">
+              <i class="fas fa-check-circle"></i>
+              {{ m }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="site-footer modern-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>ПДД Тесты</h4>
+          <p>Тестовая система по ПДД Казахстана</p>
+          <div class="social-links">
+            <a href="https://wa.me/77785627501" target="_blank" title="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="https://www.instagram.com/pddala.kz" target="_blank" title="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h4>Ссылки</h4>
+          <ul>
+            <li><a href="/rules">Правила</a></li>
+            <li><a href="/tests">Тесты</a></li>
+            <li><a href="/training">Обучение</a></li>
+            <li><a href="/leaderboard">Лидеры</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Поддержка</h4>
+          <ul>
+            <li><a href="https://wa.me/77785627501">WhatsApp</a></li>
+            <li><a href="https://www.instagram.com/pddala.kz">Instagram</a></li>
+            <li><a href="mailto:support@pdd.kz">Email</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 ПДД Тесты. Все права защищены.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+      document.getElementById('mobileMenu').classList.toggle('show');
+    });
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          scrollObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.scroll-fade, .scroll-scale').forEach(item => {
+      scrollObserver.observe(item);
+    });
+
+    const lottieItems = document.querySelectorAll('[data-lottie-src]');
+    lottieItems.forEach(item => {
+      const src = item.getAttribute('data-lottie-src');
+      lottie.loadAnimation({
+        container: item,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: src
+      });
+    });
+
+    document.querySelectorAll('.btn, .btn-primary, .btn-secondary, .btn-login, .btn-signup, .user-button, .action-link').forEach(el => {
+      el.addEventListener('mouseenter', () => el.classList.add('hover-active'));
+      el.addEventListener('mouseleave', () => el.classList.remove('hover-active'));
+      el.addEventListener('mousedown', () => el.classList.add('pressed'));
+      el.addEventListener('mouseup', () => el.classList.remove('pressed'));
+      el.addEventListener('touchstart', () => el.classList.add('pressed'));
+      el.addEventListener('touchend', () => el.classList.remove('pressed'));
+    });
+
+    // Button ripple effect for click
+    document.querySelectorAll('.btn, .btn-primary, .btn-secondary, .btn-login, .btn-signup').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        const rect = this.getBoundingClientRect();
+        ripple.style.left = `${e.clientX - rect.left}px`;
+        ripple.style.top = `${e.clientY - rect.top}px`;
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 550);
+      });
+    });
+  </script>
+</body>
+</html>

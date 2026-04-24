@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Результат{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>✅ Тест завершена</h2>
+  <p>Ваш результат: <strong>{{ score }} / {{ total }}</strong></p>
+  <p>Процент: <strong>{{ ((score / total)*100)|round(1) }}%</strong></p>
+  <p><a class="btn" href="/">На главную</a> | <a class="btn" href="/tests">Новый тест</a></p>
+</div>
+{% endblock %}

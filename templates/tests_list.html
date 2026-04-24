@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% block title %}Тесты - ПДД Тесты{% endblock %}
+{% block content %}
+
+<div class="tests-header scroll-fade">
+  <h1 class="page-title">Наши тесты</h1>
+  <p class="page-subtitle">Пройдите тесты из 40 вопросов и проверьте свои знания правил дорожного движения</p>
+  <div class="lottie-wrapper" data-lottie-src="https://assets10.lottiefiles.com/packages/lf20_j1adxtyb.json"></div>
+</div>
+
+<div class="tests-grid">
+  {% for s in sets %}
+    <div class="test-card modern scroll-scale">
+      <div class="test-card-header">
+        <h3 class="test-card-title">{{ s['name'] }}</h3>
+      </div>
+      
+      <div class="test-card-body">
+        <p class="test-description">{{ s['description'] }}</p>
+        
+        <div class="test-meta-info">
+          <div class="meta-item">
+            <i class="fas fa-question-circle"></i>
+            <span>40 вопросов</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-clock"></i>
+            <span>~30 мин</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Средний</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card-footer">
+        <a href="/start_test/{{ s['id'] }}" class="btn-primary test-btn">
+          <i class="fas fa-play"></i>
+          Начать тест
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="tests-info-box">
+  <div class="info-icon">💡</div>
+  <div class="info-content">
+    <h3>Информация</h3>
+    <p>Каждый тест содержит 40 вопросов из официальных правил дорожного движения РК. Выберите премиум-план для дополнительных тестов и подробного анализа результатов.</p>
+  </div>
+</div>
+
+<style>
+  .tests-header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .page-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-subtitle {
+    font-size: 1.2rem;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px;
+    margin-bottom: 60px;
+  }
+
+  .test-card.modern {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+    animation-fill-mode: both;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .test-card.modern:nth-child(1) { animation-delay: 0s; }
+  .test-card.modern:nth-child(2) { animation-delay: 0.1s; }
+  .test-card.modern:nth-child(3) { animation-delay: 0.2s; }
+  .test-card.modern:nth-child(4) { animation-delay: 0.3s; }
+  .test-card.modern:nth-child(5) { animation-delay: 0.4s; }
+  .test-card.modern:nth-child(6) { animation-delay: 0.5s; }
+  .test-card.modern:nth-child(7) { animation-delay: 0.6s; }
+  .test-card.modern:nth-child(8) { animation-delay: 0.7s; }
+  .test-card.modern:nth-child(9) { animation-delay: 0.8s; }
+  .test-card.modern:nth-child(10) { animation-delay: 0.9s; }
+
+  .test-card.modern:hover {
+    border-color: var(--primary);
+    box-shadow: 0 20px 50px rgba(79, 70, 229, 0.15);
+    transform: translateY(-8px);
+  }
+
+  .test-card-header {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    padding: 24px;
+  }
+
+  .test-card-title {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+
+  .test-card-body {
+    flex: 1;
+    padding: 24px;
+  }
+
+  .test-description {
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .test-meta-info {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .meta-item i {
+    color: var(--primary);
+  }
+
+  .test-card-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.02), transparent);
+  }
+
+  .test-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .tests-info-box {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(34, 211, 238, 0.08));
+    border: 2px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    animation: slideUp 0.6s ease-out 0.5s backwards;
+  }
+
+  .info-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  .info-content h3 {
+    margin: 0 0 12px 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+
+  .info-content p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .tests-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tests-info-box {
+      flex-direction: column;
+      padding: 24px;
+    }
+  }
+</style>
+
+{% endblock %}

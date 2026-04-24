@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Лидеры{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>👑 Таблица лидеров — Лучшие результаты</h2>
+  {% if user_rank %}<p>Ваш рейтинг: <strong>#{{ user_rank }}</strong> — Ваш лучший результат: <strong>{{ user_best }}</strong></p>{% endif %}
+  <table>
+    <thead><tr><th>#</th><th>Имя пользователя</th><th>Премиум</th><th>Лучший результат</th><th>Средний результат</th><th>Последний тест</th><th>Количество попыток</th></tr></thead>
+    <tbody>
+      {% for row in rows %}
+      <tr><td>{{ loop.index }}</td><td>{{ row['username'] }}</td><td>{% if row['premium'] == 1 %}Да{% else %}Нет{% endif %}</td><td>{{ row['best_score'] }}</td><td>{{ row['avg_score'] }}</td><td>{{ row['last_test'] }}</td><td>{{ row['attempts'] }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% block title %}ПДД Курсы — Правила дорожного движения{% endblock %}
+{% block content %}
+
+<div class="course-hero">
+  <h1>🚗 ПДД Курсы</h1>
+  <p>Полные материалы обучения по правилам дорожного движения Казахстана</p>
+</div>
+
+<div class="course-stats">
+  <div class="stat-card">
+    <span class="stat-icon">📚</span>
+    <span class="stat-num">10</span>
+    <div class="stat-label">Глав</div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon">📝</span>
+    <span class="stat-num">40</span>
+    <div class="stat-label">Вопросов</div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon">🚦</span>
+    <span class="stat-num">4</span>
+    <div class="stat-label">Категории</div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon">🏆</span>
+    <span class="stat-num">90%</span>
+    <div class="stat-label">Проходной балл</div>
+  </div>
+</div>
+
+<div class="road-anim">
+  <div class="road-line"></div>
+  <div class="road-line"></div>
+  <div class="road-line"></div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('chapters')">📖 Разделы</button>
+  <button class="tab-btn" onclick="switchTab('signs')">🚧 Знаки</button>
+  <button class="tab-btn" onclick="switchTab('speed')">⚡ Скорость</button>
+  <button class="tab-btn" onclick="switchTab('fines')">💰 Штрафы</button>
+</div>
+
+<div id="tab-chapters" class="tab-panel active">
+  <div class="chapter-list">
+
+    <div class="chapter-item" id="ch1">
+      <div class="chapter-header" onclick="toggleChapter('ch1')">
+        <div class="chapter-num">1</div>
+        <div class="chapter-title">🚦 Сигналы светофора</div>
+        <span class="chapter-arrow">▼</span>
+      </div>
+      <div class="chapter-body">
+        <div class="chapter-content">
+          <div class="tl-demo">
+            <div class="traffic-light" id="tl1">
+              <div class="tl-light red active" id="tl1-r"></div>
+              <div class="tl-light yellow" id="tl1-y"></div>
+              <div class="tl-light green" id="tl1-g"></div>
+            </div>
+            <div class="tl-info">
+              <h4 id="tl1-title">🔴 Красный — СТОП</h4>
+              <p id="tl1-desc">Все автомобили должны полностью остановиться. Пешеходы тоже не должны переходить.</p>
+            </div>
+          </div>
+          <div class="rule-highlight danger">⛔ Проезд на красный свет — штраф 5 МРП (15250 тенге)</div>
+          <p><strong>Значение сигналов светофора:</strong></p>
+          <ul>
+            <li>🔴 <strong>Красный</strong> — обязательная остановка у линии стоп.</li>
+            <li>🟡 <strong>Жёлтый</strong> — приготовиться. Вы можете остановиться или продолжить движение.</li>
+            <li>🟢 <strong>Зелёный</strong> — разревение на движение. Уступите дорогу пешеходам.</li>
+            <li>🟡🔴 <strong>Жёлтый + Красный</strong> — сигнал подготовки перед зелёным светом.</li>
+            <li>🟡 <strong>Мигающий жёлтый</strong> — нерегулируемый перекрёсток, будьте внимательны.</li>
+          </ul>
+          <div class="rule-highlight">💡 Где нет светофора — уступайте дорогу автомобилям справа (правило правой руки)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter-item" id="ch2">
+      <div class="chapter-header" onclick="toggleChapter('ch2')">
+        <div class="chapter-num">2</div>
+        <div class="chapter-title">🛣️ Дорожные знаки — Основные категории</div>
+        <span class="chapter-arrow">▼</span>
+      </div>
+      <div class="chapter-body">
+        <div class="chapter-content">
+          <p>Все дорожные знаки в Казахстане разделены на <strong>7 категорий</strong>:</p>
+          <div class="rule-grid">
+            <div class="rule-card">
+              <h4>⚠️ 1. Предупреждающие знаки</h4>
+              <p>Предупреждают об опасных участках дороги. Треугольные, с красной каймой.</p>
+            </div>
+            <div class="rule-card">
+              <h4>🚫 2. Запрещающие знаки</h4>
+              <p>Запрещают определённые маневры. Круглые, красная кайма, белый фон.</p>
+            </div>
+            <div class="rule-card">
+              <h4>📍 3. Предписывающие знаки</h4>
+              <p>Предписывают определённые действия. Круглые, синий фон, белые символы.</p>
+            </div>
+            <div class="rule-card">
+              <h4>🔵 4. Информационные знаки</h4>
+              <p>Информируют водителей. Синие или зелёные, прямоугольные.</p>
+            </div>
+            <div class="rule-card">
+              <h4>⭕ 5. Знаки приоритета</h4>
+              <p>Определяют приоритет проезда на перекрёстках.</p>
+            </div>
+            <div class="rule-card">
+              <h4>🔶 6. Знаки сервиса</h4>
+              <p>Указывают на наличие объектов сервиса рядом с дорогой.</p>
+            </div>
+            <div class="rule-card">
+              <h4>❌ 7. Дополнительные знаки</h4>
+              <p>Уточняют действие основного знака.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter-item" id="ch3">
+      <div class="chapter-header" onclick="toggleChapter('ch3')">
+        <div class="chapter-num">3</div>
+        <div class="chapter-title">⚡ Ограничения скорости</div>
+        <span class="chapter-arrow">▼</span>
+      </div>
+      <div class="chapter-body">
+        <div class="chapter-content">
+          <p><strong>Максимальные скорости в Казахстане:</strong></p>
+          <div class="speed-grid">
+            <div class="speed-card">
+              <h4>🏙️ В городе</h4>
+              <p><strong>50 км/ч</strong> (генерально)</p>
+              <p>На автомагистралях через город — 90 км/ч</p>
+            </div>
+            <div class="speed-card">
+              <h4>🛣️ На трассе</h4>
+              <p><strong>100 км/ч</strong> (стандартная дорога)</p>
+              <p><strong>110-120 км/ч</strong> (скоростная дорога)</p>
+            </div>
+            <div class="speed-card">
+              <h4>🚛 Для грузовиков</h4>
+              <p><strong>70 км/ч</strong> (в городе)</p>
+              <p><strong>90 км/ч</strong> (на трассе)</p>
+            </div>
+            <div class="speed-card">
+              <h4>🚌 Для автобусов</h4>
+              <p><strong>60 км/ч</strong> (в городе)</p>
+              <p><strong>90 км/ч</strong> (на трассе)</p>
+            </div>
+          </div>
+          <div class="rule-highlight">⚠️ Превышение скорости на 20 км/ч в городе: штраф 5000-20000 тенге</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="tab-signs" class="tab-panel">
+  <h3>Основные дорожные знаки</h3>
+  <p>Изучите самые важные дорожные знаки для успешной сдачи экзамена.</p>
+  <div class="signs-grid">
+    <div class="sign-card">
+      <div class="sign-icon">🛑</div>
+      <h4>СТОП</h4>
+      <p>Остановитесь перед этой линией. Проверьте в обе стороны перед проезжанием.</p>
+    </div>
+    <div class="sign-card">
+      <div class="sign-icon">⚠️</div>
+      <h4>Опасный поворот</h4>
+      <p>Впереди опасный поворот. Снизьте скорость.</p>
+    </div>
+    <div class="sign-card">
+      <div class="sign-icon">🚫</div>
+      <h4>Запрет парковки</h4>
+      <p>Парковка запрещена на этом участке дороги.</p>
+    </div>
+    <div class="sign-card">
+      <div class="sign-icon">⭕</div>
+      <h4>Главная дорога</h4>
+      <p>Вы на главной дороге. У вас есть приоритет проезда.</p>
+    </div>
+  </div>
+</div>
+
+<div id="tab-speed" class="tab-panel">
+  <h3>Таблица штрафов за превышение скорости</h3>
+  <table class="fines-table">
+    <thead>
+      <tr>
+        <th>Превышение на</th>
+        <th>Штраф (тенге)</th>
+        <th>МРП</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>20 км/ч в городе</td>
+        <td>5 000 - 20 000</td>
+        <td>1-5</td>
+      </tr>
+      <tr>
+        <td>20-40 км/ч</td>
+        <td>20 000 - 50 000</td>
+        <td>5-12</td>
+      </tr>
+      <tr>
+        <td>40+ км/ч</td>
+        <td>50 000 - 100 000</td>
+        <td>12+</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="tab-fines" class="tab-panel">
+  <h3>Основные штрафы и нарушения</h3>
+  <div class="fines-list">
+    <div class="fine-item">
+      <h4>⚡ Превышение скорости</h4>
+      <p>Штраф: 5 000-100 000 тенге в зависимости от превышения</p>
+    </div>
+    <div class="fine-item">
+      <h4>🚫 Проезд на красный свет</h4>
+      <p>Штраф: 5 МРП (15 250 тенге)</p>
+    </div>
+    <div class="fine-item">
+      <h4>⚠️ Неиспользование ремня безопасности</h4>
+      <p>Штраф: 3 МРП (9 150 тенге)</p>
+    </div>
+    <div class="fine-item">
+      <h4>🚫 Поворот без сигнала</h4>
+      <p>Штраф: 3 000-10 000 тенге</p>
+    </div>
+    <div class="fine-item">
+      <h4>📱 Использование телефона за рулём</h4>
+      <p>Штраф: 2 МРП (6 100 тенге)</p>
+    </div>
+    <div class="fine-item">
+      <h4>🚫 Парковка в запрещённом месте</h4>
+      <p>Штраф: 2 МРП (6 100 тенге)</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fines-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  .fines-table th,
+  .fines-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  .fines-table th {
+    background: #667eea;
+    color: white;
+  }
+  .fines-list {
+    display: grid;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  .fine-item {
+    padding: 15px;
+    background: #f8fafc;
+    border-left: 4px solid #ef4444;
+    border-radius: 4px;
+  }
+  .fine-item h4 {
+    margin-top: 0;
+    color: #1f2937;
+  }
+</style>
+
+<script>
+  function switchTab(tabName) {
+    const panels = document.querySelectorAll('.tab-panel');
+    const buttons = document.querySelectorAll('.tab-btn');
+    
+    panels.forEach(p => p.classList.remove('active'));
+    buttons.forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    event.target.classList.add('active');
+  }
+  
+  function toggleChapter(id) {
+    const body = document.querySelector(`#${id} .chapter-body`);
+    body.style.display = body.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
+
+{% endblock %}

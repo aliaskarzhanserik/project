@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %}Главная - ПДД Тесты{% endblock %}
+{% block content %}
+
+<section class="hero-section scroll-fade">
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1 class="hero-title">
+        <span class="gradient-text">Станьте мастером дорожных правил</span>
+        <br>
+        <span>Проверьте свои знания прямо сейчас</span>
+      </h1>
+      <p class="hero-subtitle">
+        Освойте правила дорожного движения Казахстана легко и быстро с нашей интерактивной платформой обучения.
+      </p>
+      <div class="hero-buttons">
+        {% if session.username %}
+          <a href="/tests" class="btn-primary btn-lg">          
+            <i class="fas fa-play"></i>
+            Начать тест
+          </a>
+          <a href="/leaderboard" class="btn-secondary btn-lg">
+            <i class="fas fa-chart-bar"></i>
+            Таблица лидеров
+          </a>
+        {% else %}
+          <a href="/register" class="btn-primary btn-lg">            
+            <i class="fas fa-rocket"></i>
+            Зарегистрироваться
+          </a>
+          <a href="/login" class="btn-secondary btn-lg">
+            <i class="fas fa-sign-in-alt"></i>
+            Вход
+          </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="lottie-wrapper scroll-scale" data-lottie-src="https://assets2.lottiefiles.com/packages/lf20_5ngs2ksb.json"></div>
+    </div>
+  </div>
+</section>
+
+<section class="stats-section scroll-fade">
+  <div class="stats-container">
+    <div class="stat-item">
+      <div class="stat-icon">📊</div>
+      <div class="stat-value">55+</div>
+      <div class="stat-text">Вопросов</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-value">15</div>
+      <div class="stat-text">Типов тестов</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">📈</div>
+      <div class="stat-value">100%</div>
+      <div class="stat-text">Успешность</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">👥</div>
+      <div class="stat-value">1000+</div>
+      <div class="stat-text">Пользователей</div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <h2 class="section-title">Почему выбирают нас?</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎓</div>
+      <h3 class="feature-title">Практическое обучение</h3>
+      <p class="feature-desc">Каждый вопрос содержит подробное объяснение правила.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏆</div>
+      <h3 class="feature-title">Лидеры и статистика</h3>
+      <p class="feature-desc">Отслеживайте прогресс и сравнивайте результаты.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3 class="feature-title">Доступ со всех устройств</h3>
+      <p class="feature-desc">Учитесь на мобильном или компьютере в любое время.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💡</div>
+      <h3 class="feature-title">Подробные объяснения</h3>
+      <p class="feature-desc">Поймите почему это правильный ответ.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3 class="feature-title">Отслеживание прогресса</h3>
+      <p class="feature-desc">Смотрите результаты в режиме реального времени.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌙</div>
+      <h3 class="feature-title">Ночной режим</h3>
+      <p class="feature-desc">Удобное обучение в любое время суток.</p>
+    </div>
+  </div>
+</section>
+
+<section class="services-section">
+  <h2 class="section-title">Как начать?</h2>
+  <div class="services-grid">
+    <div class="service-box">
+      <div class="service-number">1️⃣</div>
+      <h3>Пройти тест</h3>
+      <p>Пройдите полный тест из 40 вопросов и оцените ваши знания.</p>
+      <a href="/tests" class="service-link">Начать →</a>
+    </div>
+    <div class="service-box">
+      <div class="service-number">2️⃣</div>
+      <h3>Обучение</h3>
+      <p>Используйте обучающие материалы и видеоуроки.</p>
+      <a href="/training" class="service-link">Учиться →</a>
+    </div>
+    <div class="service-box">
+      <div class="service-number">3️⃣</div>
+      <h3>Рейтинг</h3>
+      <p>Смотрите прогресс и сравнивайте с другими.</p>
+      <a href="/leaderboard" class="service-link">Посмотреть →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

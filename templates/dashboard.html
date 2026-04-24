@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% block title %}Профиль - ПДД Тесты{% endblock %}
+{% block content %}
+
+<section class="dashboard-hero scroll-fade">
+  <div class="dashboard-hero-content">
+    <div class="user-avatar">{{ session.username[0].upper() }}</div>
+    <div>
+      <p class=\"small-label\">Личный кабинет</p>
+      <h1 class=\"hero-title\">{{ session.username }}</h1>
+      <p class=\"hero-subtitle\">Ваши последние результаты и статистика тестирования по правилам.</p>
+      <div class=\"hero-actions\">
+        {% if session.premium %}
+        <a href="/tests" class="btn-secondary">Премиум тест</a>
+        {% endif %}
+        {% if session.is_admin %}
+        <a href="/admin" class="btn-secondary" style="background:#2563eb; color:#fff;">Админ панель</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="hero-stat-card">
+      <div class=\"stat-pill\">Премиум статус: <strong>{% if session.premium %}Да{% else %}Нет{% endif %}</strong></div>
+      <div class=\"panel-metric\">
+        <span>Тесты</span>
+        <strong>{{ total_attempts }}</strong>
+      </div>
+      <div class=\"panel-metric\">
+        <span>Средний балл</span>
+        <strong>{{ avg_percent }}%</strong>
+      </div>
+      <div class=\"panel-metric\">
+        <span>Лучший результат</span>
+        <strong>{{ best_percent }}%</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard-grid">
+  <article class="dashboard-card">
+    <div class="card-header">
+      <h2>Статистика прошлых тестов</h2>
+      <p>Распределение результатов за последние 10 тестов.</p>
+    </div>
+    </div>
+    <div class="donut-panel">
+      <div class="donut-chart" data-excellent="{{ chart_angles.excellent_end }}" data-good-start="{{ chart_angles.good_start }}" data-good-end="{{ chart_angles.good_end }}" data-need-start="{{ chart_angles.need_start }}"></div>
+      <div class="donut-legend">
+        <div class="donut-legend-item"><span class="donut-legend-dot legend-excellent"></span> >85% ({{ excellent }})</div>
+        <div class="donut-legend-item"><span class="donut-legend-dot legend-good"></span> 65–85% ({{ good }})</div>
+        <div class="donut-legend-item"><span class="donut-legend-dot legend-need"></span> Ниже 65% ({{ needs_improvement }})</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="dashboard-card recent-results-card">
+    <div class="card-header">
+      <h2>Последние результаты</h2>
+      <p>Используйте кнопку повторить, чтобы быстрее приступить к новому тесту.</p>
+    </div>
+    {% if recent_results %}
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>№
+            <th>Дата
+            <th>Баллы
+            <th>Процент
+            <th>Повторить
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in recent_results %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ row['test_date'] }}</td>
+            <td>{{ row['score'] }} / {{ row['total_questions'] or 40 }}</td>
+            <td>{{ ((row['score'] / (row['total_questions'] or 40)) * 100) | round(1) }}%</td>
+            <td><a href="/tests" class="repeat-btn">Повторить</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty-state">
+        <p>Вы еще не прошли тесты. Пройдите первый тест и накопите статистику своих результатов.</p>
+        <a href=\"/tests\" class=\"btn-primary\">Начать тест</a>
+      </div>
+    {% endif %}
+  </article>
+</section>
+
+<style>
+  .dashboard-hero {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    border-radius: 24px;
+    padding: 42px 36px;
+    margin-bottom: 28px;
+  }
+
+  .dashboard-hero-content {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 360px;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .small-label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+  }
+
+  .hero-stat-card {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.24);
+    border-radius: 24px;
+    padding: 24px;
+    display: grid;
+    gap: 14px;
+  }
+
+  .panel-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.14);
+  }
+
+  .panel-metric span {
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+  }
+
+  .panel-metric strong {
+    font-size: 1.4rem;
+    color: #fff;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .dashboard-card {
+    background: var(--card);
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 26px;
+  }
+
+  .card-header h2 {
+    margin-bottom: 8px;
+    font-size: 1.4rem;
+    color: var(--text);
+  }
+
+  .card-header p {
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .donut-panel {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .donut-chart {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .donut-chart::after {
+    content: '{{ avg_percent }}%';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: var(--text);
+  }
+
+  .donut-legend {
+    display: grid;
+    gap: 12px;
+  }
+
+  .donut-legend-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .donut-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .legend-excellent { background: var(--accent); }
+  .legend-good { background: var(--primary); }
+  .legend-need { background: #d8e8eb; }
+
+  .results-table th, .results-table td {
+    padding: 14px 12px;
+    border-color: var(--border);
+  }
+
+  .results-table th {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .repeat-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.92rem;
+    transition: transform 0.2s ease;
+  }
+
+  .repeat-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .empty-state {
+    padding: 32px;
+    border-radius: 20px;
+    background: var(--surface);
+    text-align: center;
+  }
+
+  .empty-state p {
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+
+  @media (max-width: 980px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .donut-panel {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .dashboard-hero-content {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .dashboard-hero {
+      padding: 30px 22px;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  // Apply donut chart gradient using data attributes
+  const donutChart = document.querySelector('.donut-chart');
+  if (donutChart) {
+    const excellent = parseFloat(donutChart.dataset.excellent);
+    const goodStart = parseFloat(donutChart.dataset.goodStart);
+    const goodEnd = parseFloat(donutChart.dataset.goodEnd);
+    const needStart = parseFloat(donutChart.dataset.needStart);
+    
+    const gradient = `conic-gradient(var(--accent) 0deg ${excellent}deg, var(--primary) ${goodStart}deg ${goodEnd}deg, #d8e8eb ${needStart}deg 360deg)`;
+    donutChart.style.background = gradient;
+  }
+</script>
+
+{% endblock %}

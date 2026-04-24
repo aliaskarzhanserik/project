@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Тест{% endblock %}
+{% block content %}
+
+<section class="test-board">
+  <div class="test-topbar">
+    <div class="test-progress-wrap">
+      <div class="test-progress-info">
+        <span class="progress-title">Прогресс</span>
+        <span id="progressText">0 / 0</span>
+      </div>
+      <div class="progress-bg">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </div>
+    <div class="test-timer-wrap">
+      <div class="timer-card">
+        <span>Время</span>
+        <strong id="timer">40:00</strong>
+      </div>
+      <div class="autosave-status" id="autosaveStatus">Не сохранено</div>
+    </div>
+  </div>
+
+  <form id="testForm" method="post" action="/submit" data-total-questions="{{ questions|length }}">
+    {% if test_set %}<input type="hidden" name="test_id" value="{{ test_set['id'] }}">{% endif %}
+
+    {% for q in questions %}
+      <section class="question-card">
+        <div class="question-header">
+          <span class="question-index">{{ loop.index }} / {{ questions|length }}</span>
+          <h2 class="question-title">{{ q['question_text'] }}</h2>
+        </div>
+        <div class="options-grid">
+          <label class="option-card">
+            <input type="radio" name="q_{{ q['id'] }}" value="A">
+            <span class="option-label">A. {{ q['option_a'] }}</span>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="q_{{ q['id'] }}" value="B">
+            <span class="option-label">B. {{ q['option_b'] }}</span>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="q_{{ q['id'] }}" value="C">
+            <span class="option-label">C. {{ q['option_c'] }}</span>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="q_{{ q['id'] }}" value="D">
+            <span class="option-label">D. {{ q['option_d'] }}</span>
+          </label>
+        </div>
+      </section>
+    {% endfor %}
+
+    <div class="submit-wrap">
+      <button class="btn-primary btn-large" type="submit">Отправить</button>
+    </div>
+  </form>
+</section>
+
+<script>
+  const form = document.getElementById('testForm');
+  const totalQuestions = parseInt(form.getAttribute('data-total-questions')) || 40;
+  const timerEl = document.getElementById('timer');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+  const autosaveStatus = document.getElementById('autosaveStatus');
+  const inputs = Array.from(document.querySelectorAll('input[type=radio]'));
+
+  let timeLeft = 40 * 60;
+
+  function formatTime(time) {
+    const minutes = String(Math.floor(time / 60)).padStart(2, '0');
+    const seconds = String(time % 60).padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }
+
+  function updateProgress() {
+    const answered = inputs.filter(input => input.checked).map(input => input.name).filter((v, i, a) => a.indexOf(v) === i).length;
+    const percent = totalQuestions ? Math.round((answered / totalQuestions) * 100) : 0;
+    progressFill.style.width = `${percent}%`;
+    progressText.textContent = `${answered} / ${totalQuestions}`;
+  }
+
+  updateProgress();
+  inputs.forEach(input => input.addEventListener('change', updateProgress));
+
+  timerEl.textContent = formatTime(timeLeft);
+  setAutosaveText('saved');
+
+  const timerInterval = setInterval(() => {
+    timeLeft -= 1;
+    timerEl.textContent = formatTime(timeLeft);
+    if (timeLeft <= 60) {
+      timerEl.classList.add('warning');
+    }
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      form.submit();
+    }
+  }, 1000);
+
+  setInterval(() => {
+    const answered = inputs.filter(input => input.checked).length;
+    if (!answered) return;
+    setAutosaveText('saving');
+    autosaveStatus.classList.add('saving');
+    autosaveStatus.classList.remove('saved');
+
+    fetch('/autosave', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(Object.fromEntries(inputs.filter(i => i.checked).map(i => [i.name, i.value])))
+    }).then(response => {
+      if (response.status === 204) {
+        setAutosaveText('saved');
+        autosaveStatus.classList.remove('saving');
+        autosaveStatus.classList.add('saved');
+      }
+    }).catch(() => {
+      setAutosaveText('error');
+    });
+  }, 20 * 1000);
+</script>
+
+{% endblock %}

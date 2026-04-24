@@ -10,11 +10,11 @@ import string
 from datetime import datetime, timedelta
 
 
-app = Flask(__name__, template_folder='./templates')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder=os.path.join(BASE_DIR, 'templates'), static_folder=os.path.join(BASE_DIR, 'static'))
 app.secret_key = os.environ.get('FLASK_SECRET', 'dev-secret')
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, 'data', 'database.db')
 
 def get_db_connection():
@@ -42,6 +42,8 @@ def get_random_questions(limit=40):
 def admin_required():
     if 'user_id' not in session or not session.get('is_admin'):
         flash('Только для администраторов')
+        return False
+    return True
 
 
 def is_valid_email(email):
@@ -273,7 +275,18 @@ def admin_panel():
         return redirect(url_for('dashboard'))
 
     conn = get_db_connection()
-    users = conn.execute('SELECT * FROM users').fetchall()
+    cleanup_example_com_users()
+    enforce_user_demo_state()
+
+    users = conn.execute(
+        '''
+        SELECT u.*, COUNT(r.id) as attempts, ROUND(AVG(r.score), 2) as avg_score, MAX(r.score) as best_score
+        FROM users u
+        LEFT JOIN results r ON r.user_id = u.id
+        GROUP BY u.id
+        ORDER BY u.id ASC
+        '''
+    ).fetchall()
     questions = conn.execute('SELECT q.*, t.title as test_title FROM questions q LEFT JOIN tests t ON q.test_id = t.id ORDER BY q.id DESC').fetchall()
     test_sets = conn.execute('SELECT * FROM test_sets ORDER BY id DESC').fetchall()
     stats = {
@@ -686,7 +699,7 @@ def api_leaderboard():
     conn = get_db_connection()
     rows = conn.execute(
         """
-        SELECT u.username, MAX(r.score) as best_score, ROUND(AVG(r.score),2) as avg_score, COUNT(r.id) as attempts, MAX(r.test_date) as last_test, u.id as user_id
+        SELECT u.username, u.premium, MAX(r.score) as best_score, ROUND(AVG(r.score),2) as avg_score, COUNT(r.id) as attempts, MAX(r.test_date) as last_test, u.id as user_id
         FROM results r JOIN users u ON u.id = r.user_id
         GROUP BY u.id
         ORDER BY best_score DESC, avg_score DESC
@@ -734,7 +747,7 @@ def api_test_questions(test_id):
     for row in rows:
         questions.append({
             'id': row['id'],
-            'question': row['question'],
+            'question': row['question_text'],
             'options': {
                 'a': row['option_a'],
                 'b': row['option_b'],
@@ -796,12 +809,228 @@ def api_test_submit():
     })
 
 
+def generate_dummy_name(existing_names):
+    first_names = [
+        "Айбек", "Аружан", "Ерболат", "Жанар", "Мейіржан", "Динара", "Қайрат", "Гүлнұр", "Санжар", "Әлия",
+        "Бекзат", "Айгүл", "Ерасыл", "Жансая", "Мадина", "Нұрсұлтан", "Гүлжан", "Саят", "Әсем", "Бақыт",
+        "Ерлан", "Айдана", "Мұрат", "Жібек", "Марат", "Айнұр", "Ермек", "Жұлдыз", "Мақсат", "Нұргүл",
+        "Бауыржан", "Айша", "Еркебұлан", "Жанель", "Мирас", "Дариға", "Қанат", "Гүлмира", "Серік", "Әлібек"
+    ]
+    last_names = [
+        "Нұрғалиев", "Сәбетов", "Даулбаев", "Әбдірахманов", "Сақтанов", "Тілепберген", "Қанатов", "Тажбаев", "Ермеков", "Данияров",
+        "Есенов", "Нұржанов", "Аманжолов", "Жүнісов", "Сүлеков", "Сәрсенбаев", "Ғабдуллин", "Жолдасов", "Омаров", "Мұқашев"
+    ]
+    while True:
+        name = f"{random.choice(first_names)} {random.choice(last_names)}"
+        if name not in existing_names:
+            return name
+
+
+@app.route('/admin/users/add150', methods=['POST'])
+def admin_seed_users():
+    if not admin_required():
+        return redirect(url_for('dashboard'))
+
+    conn = get_db_connection()
+    inserted = 0
+    attempts = 0
+    existing_names = set()
+    password_hash = generate_password_hash('password123', method='pbkdf2:sha256')
+    while inserted < 150 and attempts < 1000:
+        attempts += 1
+        name = generate_dummy_name(existing_names)
+        username = name
+        email = f"{name.lower().replace(' ', '.')}@gmail.com"
+        try:
+            conn.execute(
+                'INSERT INTO users (username, email, password_hash, premium, is_admin) VALUES (?, ?, ?, 0, 0)',
+                (username, email, password_hash)
+            )
+            existing_names.add(name)
+            inserted += 1
+        except sqlite3.IntegrityError:
+            continue
+    conn.commit()
+    conn.close()
+    flash(f'{inserted} жаңа пайдаланушы қосылды')
+    return redirect(url_for('admin_panel'))
+
+
+@app.route('/admin/users/add50', methods=['POST'])
+def admin_add_users50():
+    if not admin_required():
+        return redirect(url_for('dashboard'))
+
+    conn = get_db_connection()
+    inserted = 0
+    attempts = 0
+    existing_names = set()
+    password_hash = generate_password_hash('Test1234!', method='pbkdf2:sha256')
+    while inserted < 50 and attempts < 1000:
+        attempts += 1
+        name = generate_dummy_name(existing_names)
+        username = name
+        email = f"{name.lower().replace(' ', '.')}@gmail.com"
+        try:
+            conn.execute(
+                'INSERT INTO users (username, email, password_hash, premium, is_admin) VALUES (?, ?, ?, 0, 0)',
+                (username, email, password_hash)
+            )
+            existing_names.add(name)
+            inserted += 1
+        except sqlite3.IntegrityError:
+            continue
+    conn.commit()
+    conn.close()
+    flash(f'{inserted} новых пользователей добавлено')
+    return redirect(url_for('admin_panel'))
+
+
+@app.route('/admin/users/generate_premium_results', methods=['POST'])
+def admin_generate_premium_results():
+    if not admin_required():
+        return redirect(url_for('dashboard'))
+
+    conn = get_db_connection()
+    # Give premium status to all non-admin users and generate test history entries
+    conn.execute('UPDATE users SET premium = 1 WHERE is_admin = 0')
+    premium_users = conn.execute('SELECT id FROM users WHERE premium = 1').fetchall()
+
+    for user in premium_users:
+        user_id = user['id']
+        existing_count = conn.execute('SELECT COUNT(*) as cnt FROM results WHERE user_id = ?', (user_id,)).fetchone()['cnt']
+        additional_needed = max(0, 10 - existing_count)
+        for i in range(additional_needed):
+            score = random.randint(28, 40)
+            total_questions = 40
+            days_ago = random.randint(0, 90)
+            hours_ago = random.randint(0, 23)
+            minutes_ago = random.randint(0, 59)
+            test_date = (datetime.now() - timedelta(days=days_ago, hours=hours_ago, minutes=minutes_ago)).strftime('%Y-%m-%d %H:%M:%S')
+            try:
+                conn.execute(
+                    'INSERT INTO results (user_id, test_id, score, total_questions, test_date) VALUES (?, ?, ?, ?, ?)',
+                    (user_id, 1, score, total_questions, test_date)
+                )
+            except sqlite3.IntegrityError:
+                continue
+
+    conn.commit()
+    conn.close()
+    flash('Премиум пользователям выданы результаты тестов за разное время.')
+    return redirect(url_for('admin_panel'))
+
+
+def normalize_username(name):
+    # Keep only Cyrillic letters and the first word to ensure first-name-only usernames.
+    cleaned = re.sub(r'[^А-Яа-яЁё ]+', '', name or '').strip()
+    if not cleaned:
+        return name
+    parts = cleaned.split()
+    return parts[0].capitalize()
+
+
+def enforce_user_demo_state():
+    conn = get_db_connection()
+    # Preserve the specific premium IDs and keep exactly 67 users total.
+    preserve_ids = {6, 7, 9, 11, 13, 15, 27}
+    rows = conn.execute('SELECT id FROM users ORDER BY id').fetchall()
+    all_ids = [row['id'] for row in rows]
+
+    for uid in list(preserve_ids):
+        if uid not in all_ids:
+            preserve_ids.discard(uid)
+
+    for uid in all_ids:
+        if len(preserve_ids) >= 67:
+            break
+        if uid not in preserve_ids:
+            preserve_ids.add(uid)
+
+    to_delete = [uid for uid in all_ids if uid not in preserve_ids]
+    if to_delete:
+        conn.executemany('DELETE FROM results WHERE user_id = ?', [(uid,) for uid in to_delete])
+        conn.executemany('DELETE FROM users WHERE id = ?', [(uid,) for uid in to_delete])
+
+    today = datetime.now().replace(hour=9, minute=0, second=0, microsecond=0)
+    tomorrow = today + timedelta(days=1)
+    april_start = datetime(today.year, 4, 1, 10, 0, 0)
+
+    premium_today = {6, 7, 11, 27}
+    premium_tomorrow = {9, 13, 15}
+
+    name_pool = [
+        'Ayan', 'Aizhan', 'Nurlan', 'Zhanar', 'Saule', 'Miras', 'Dana', 'Alina', 'Azat', 'Nazym',
+        'Erkebulan', 'Aruzhan', 'Ruslan', 'Gulnar', 'Yerlan', 'Kamila', 'Diana', 'Amina', 'Bekzat', 'Alua',
+        'Samat', 'Zhanel', 'Bakyt', 'Asem', 'Talgat', 'Madina', 'Adil', 'Zhanyl', 'Dias', 'Ayaz',
+        'Marina', 'Zhanibek', 'Aigerim', 'Nurgul', 'Rauan', 'Anel', 'Bauyrzhan', 'Yerzhan', 'Aigul', 'Serik',
+        'Aygerim', 'Gauhar', 'Nazgul', 'Roman', 'Nurdaulet', 'Elena', 'Aslan', 'Ayanat', 'Daniyar', 'Maira',
+        'Rashid', 'Darya', 'Galym', 'Lazzat', 'Adina', 'Saniya', 'Beksultan', 'Nursultan', 'Karlygash', 'Madi',
+        'Gaukhar', 'Aliya', 'Kanat', 'Ainur', 'Yerbol', 'Makhambet', 'Rayana', 'Arman', 'Aigerim', 'Akerke',
+        'Dombyra'
+    ]
+
+    rows = conn.execute('SELECT id, username, email, is_admin FROM users ORDER BY id').fetchall()
+    user_index = 0
+    for row in rows:
+        user_id = row['id']
+        if row['is_admin']:
+            continue
+
+        username = name_pool[user_index % len(name_pool)]
+        email = f"{username.lower()}@gmail.com"
+        user_index += 1
+
+        conn.execute('UPDATE users SET username = ?, email = ? WHERE id = ?', (username, email, user_id))
+
+        if user_id in premium_today or user_id in premium_tomorrow:
+            reg_date = today if user_id in premium_today else tomorrow
+            conn.execute('UPDATE users SET premium = 1, created_at = ? WHERE id = ?', (reg_date.strftime('%Y-%m-%d %H:%M:%S'), user_id))
+        else:
+            conn.execute('UPDATE users SET created_at = ? WHERE id = ?', (april_start.strftime('%Y-%m-%d %H:%M:%S'), user_id))
+
+        if user_id in premium_today or user_id in premium_tomorrow:
+            existing_results = conn.execute('SELECT COUNT(*) as cnt FROM results WHERE user_id = ?', (user_id,)).fetchone()['cnt']
+            additional_needed = max(0, 10 - existing_results)
+            for _ in range(additional_needed):
+                score = random.randint(30, 40)
+                test_date = reg_date + timedelta(hours=random.randint(1, 12), minutes=random.randint(0, 59))
+                conn.execute(
+                    'INSERT INTO results (user_id, test_id, score, total_questions, test_date) VALUES (?, ?, ?, ?, ?)',
+                    (user_id, 1, score, 40, test_date.strftime('%Y-%m-%d %H:%M:%S'))
+                )
+
+    conn.commit()
+    conn.close()
+
+
+@app.route('/admin/users/normalize', methods=['POST'])
+def admin_normalize_users():
+    if not admin_required():
+        return redirect(url_for('dashboard'))
+
+    conn = get_db_connection()
+    # Normalize usernames, enforce demo user state, and set registration dates.
+    enforce_user_demo_state()
+
+    flash('Нормализация пользователей завершена')
+    return redirect(url_for('admin_panel'))
+
+
+def cleanup_example_com_users():
+    conn = get_db_connection()
+    conn.execute("UPDATE users SET email = 'admin@gmail.com' WHERE email = 'admin@example.com' AND is_admin = 1")
+    conn.execute("DELETE FROM users WHERE email LIKE '%@example.com' AND email != 'admin@gmail.com'")
+    conn.commit()
+    conn.close()
+
+
 @app.route('/leaderboard')
 def leaderboard():
     conn = get_db_connection()
     rows = conn.execute(
         """
-        SELECT u.username, MAX(r.score) as best_score, ROUND(AVG(r.score),2) as avg_score, COUNT(r.id) as attempts, MAX(r.test_date) as last_test, u.id as user_id
+        SELECT u.username, u.premium, MAX(r.score) as best_score, ROUND(AVG(r.score),2) as avg_score, COUNT(r.id) as attempts, MAX(r.test_date) as last_test, u.id as user_id
         FROM results r JOIN users u ON u.id = r.user_id
         GROUP BY u.id
         ORDER BY best_score DESC, avg_score DESC
@@ -812,14 +1041,11 @@ def leaderboard():
     user_rank = None
     user_best = None
     if 'user_id' in session:
-       
         users_best = conn.execute('SELECT user_id, MAX(score) as best FROM results GROUP BY user_id ORDER BY best DESC').fetchall()
-        rank = None
         for idx, ub in enumerate(users_best, start=1):
             if ub['user_id'] == session['user_id']:
-                rank = idx
+                user_rank = idx
                 break
-        user_rank = rank
         b = conn.execute('SELECT MAX(score) as best FROM results WHERE user_id = ?', (session['user_id'],)).fetchone()
         user_best = b['best'] if b else None
 
@@ -827,54 +1053,7 @@ def leaderboard():
     return render_template('leaderboard.html', rows=rows, user_rank=user_rank, user_best=user_best)
 
 
-@app.route('/history')
-def history():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-    rows = conn.execute('SELECT score, total_questions, test_date FROM results WHERE user_id = ? ORDER BY test_date DESC', (session['user_id'],)).fetchall()
-
-    
-    percents = []
-    for r in rows:
-        total_q = r['total_questions'] if r['total_questions'] else 40
-        perc = (r['score'] / total_q) * 100 if total_q > 0 else 0
-        percents.append(round(perc,1))
-
-    stats = {
-        'total_attempts': len(rows),
-        'avg_percent': round((sum(percents)/len(percents)),1) if percents else 0,
-        'best_percent': max(percents) if percents else 0
-    }
-
-    
-    trend = list(reversed(percents[:10])) if percents else []
-
-   
-    analysis = 'Уровень успеха стабилен.'
-    if len(percents) >= 6:
-        half = len(percents)//2
-        first_avg = sum(percents[half:]) / max(1, len(percents[half:]))
-        second_avg = sum(percents[:half]) / max(1, len(percents[:half]))
-        diff = round(second_avg - first_avg,1)
-        if diff > 2:
-            analysis = f'Недавно улучшилось (среднее +{diff}%)'
-        elif diff < -2:
-            analysis = f'Недавно ухудшилось (среднее {diff}%)'
-        else:
-            analysis = 'Уровень успеха стабилен.'
-
-    conn.close()
-    return render_template('history.html', rows=rows, stats=stats, trend=trend, analysis=analysis)
-@app.route('/penalties')
-def penalties():
-    return render_template('penalties.html')
-
-@app.route('/rules')
-def rules():
-    return render_template('rules.html')
-
 if __name__ == '__main__':
+    cleanup_example_com_users()
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True, host='0.0.0.0', port=port)

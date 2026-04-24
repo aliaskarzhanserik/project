@@ -42,7 +42,13 @@
           <i class="fas fa-user-circle"></i>
           <span>Профиль</span>
         </a>
-      </nav>
+        {% if session.get('is_admin') %}
+        <a href="/admin" class="nav-item {% if request.path == '/admin' %}active{% endif %}">
+          <i class="fas fa-tools"></i>
+          <span>Админ</span>
+        </a>
+        {% endif %}
+       </nav>
 
       <div class="auth-section">
         {% if session.username %}

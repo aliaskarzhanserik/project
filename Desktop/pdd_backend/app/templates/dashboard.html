@@ -10,8 +10,12 @@
       <h1 class=\"hero-title\">{{ session.username }}</h1>
       <p class=\"hero-subtitle\">Ваши последние результаты и статистика тестирования по правилам.</p>
       <div class=\"hero-actions\">
-        <a href=\"/tests\" class=\"btn-secondary\">Начать новый тест</a>
-        <a href=\"/history\" class=\"btn-secondary\">История тестов</a>
+        {% if session.premium %}
+        <a href="/tests" class="btn-secondary">Премиум тест</a>
+        {% endif %}
+        {% if session.is_admin %}
+        <a href="/admin" class="btn-secondary" style="background:#2563eb; color:#fff;">Админ панель</a>
+        {% endif %}
       </div>
     </div>
     <div class="hero-stat-card">
@@ -42,9 +46,9 @@
     <div class="donut-panel">
       <div class="donut-chart" data-excellent="{{ chart_angles.excellent_end }}" data-good-start="{{ chart_angles.good_start }}" data-good-end="{{ chart_angles.good_end }}" data-need-start="{{ chart_angles.need_start }}"></div>
       <div class="donut-legend">
-            <div class="donut-legend-item">>85%+ ({{ excellent }})        <span class="donut-legend-dot legend-excellent"> 85%+ ({{ excellent }})</div>
-        <div class="donut-legend-item">>65–85% ({{ good }})<span class="donut-legend-dot legend-good"> 65–85% ({{ good }})</div>
-        <div class="donut-legend-item">>Ниже 65% ({{ needs_improvement }})<span class="donut-legend-dot legend-need"> 65%-тан төмен ({{ needs_improvement }})</div>
+        <div class="donut-legend-item"><span class="donut-legend-dot legend-excellent"></span> >85% ({{ excellent }})</div>
+        <div class="donut-legend-item"><span class="donut-legend-dot legend-good"></span> 65–85% ({{ good }})</div>
+        <div class="donut-legend-item"><span class="donut-legend-dot legend-need"></span> Ниже 65% ({{ needs_improvement }})</div>
       </div>
     </div>
   </article>
